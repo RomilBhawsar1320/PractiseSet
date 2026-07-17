@@ -1,0 +1,16 @@
+Stream Api provide functional programming and came in java 8
+
+Stream is a sequence of elements which is used to perform operations on Collections
+processing collection sequentially . stream works on one element at a time of any collection it is used
+
+Let suppose you have a collection which have 5 million students and size is huge then Stream Api won't be efficient
+that's why we have parallel stream for this use case.
+
+A laptop has N cores and the no of thread can be created equal to the no of cores, and they can process
+data via multiple threads which we call parallel processing
+
+to parallelly process huge data we use Parallel Stream which uses multi threading and use multiple threads
+
+internally it uses ForkJoin Pool
+
+

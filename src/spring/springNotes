@@ -1,0 +1,88 @@
+                                     SPRING
+
+Spring is a framework that provide set of classes , interface and libraries for developing applications faster.
+
+Why Spring?
+Earlier we had Heavy weight EJB enterprise java beans , Struts and Servlets and have issues with Loose Coupling , scalability
+issues and dependency management issues were there. due to these problems   of lot of coding and lot of
+configurations . John Rodson came with spring in 2002 . Latest spring version 7.X.X and SpringBoot 4.1.0
+and we still use 3.5.x . Spring is a Lightweight framework which is more modeularized (Reuasability)
+and it uses a concept of IOC Containers
+
+IOC Containers (Inversion of Control ) Principle - the application flow will not be designed by the programmer
+but by the Framework. Object creation process or Object lifecycle management is done by framework. so far
+programmer was deciding whole flow now the flow of an application is taken care by Spring Framework.we wil not use
+new Class() [object creation]
+
+IOC principle implements Event Backed system , Callback system or Service Lookup system and
+Dependency Injection(Constructors , methods and properties)
+
+Good Community support in Spring . even if you face issues we have lot of people and lot of solution there
+
+Features of Spring
+1 IOC Container
+2 Dependency Injection
+3 Data Access - Data JPA , JDBC , Hibernate etc.
+4 Web MVC Framework (Server side web app model view Controller )
+5 Transaction Management support (Unified)
+6 Aspect Oriented Programming (AOP)
+7 Authentication and Authorization Support (LDAP , JWT , OAUTH2)
+8 Good Security support
+9 Good Testing Support like JUNIT , MOCKITO
+10 Internationalization and Localisation support for various languages like Eng, Hindi etc.
+
+
+Spring Boot Framework
+Lot of Configuration to work with Spring and lot of repeated things related to dependencies
+people identified patterns and simplified Spring with an Opinionated Framework for more faster
+development is called Spring-boot . Spring Boot built on top of Spring.Simplified Bean Creation and
+various things . Spring boot helps in focusing on Business logic rather than maintaining configuration.
+
+
+Bean - any Object Lifecycle in JAVA managed by Spring framework is called BEAN (POJO/POJI plainoldjavaObj/interfaces)
+
+BeanFactory and ApplicationContext are classes that represent IOC Container.
+
+BeanFactory is old now and ApplicationContext provide added features like eventHandling
+
+Bean Creation can be done in following way
+1 XML File based
+2 Java Based
+3 Annotation Based(SpringBoot)
+
+By default, Spring beans have singleton scope. and if you want you can make it prototype scope
+various types of scopes we can use ( Singleton is by default scope in spring  , prototype, request , session , application )
+
+In Singleton it will create bean in ApplicationContext (Interface) IOC Container. only once instance will be created at the start of application and
+that will be provided everytime.
+In prototype it will create when we ask or call getBean()  method then only it will create bean in the IOC Container.
+new object creation every time whenever calling getbean method on context and not at the time of start of application.
+
+There is three ways to do Dependency Injection.
+1. Constructor Injection
+2. Setter Injection
+3. Field Injection
+
+Bean Lifecycle :
+1 object creation
+2 setting up all the dependencies
+3 calling init method or initialization methods
+4 if there is any requirement of post processor beans ex. (Car class object need Engine object)
+
+
+
+configuration Metadata can be provided in three ways
+1. XML Based
+2. Java Based
+3. Spring Based
+
+when to use XML and Java Based -
+without touching these type of model classes (car , engine) . if you want to reuse it with any other framework use xml based configuration.
+Because they are completely decoupled from any framework . let suppose new framework comes up like micronaut then you need decoupled design
+Decoupled design is always scalable , maintainable and reusable. we can make domain object and service classes as java based and web controlled layer
+as REST API of Spring . your code will be like pulg and play if any new framework comes up . you do not need to change your domain objects and service classes .
+
+if i only use Spring based configuration then my business will be tightly coupled with Spring Framework .
+
+
+

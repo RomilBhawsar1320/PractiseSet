@@ -1,0 +1,43 @@
+
+Hashing Technique -
+
+consider you are maintaining records of employees and you have 10000 employees
+and you have to do operation like search on it and let suppose you search priyanshi
+then given priyanshi's name all details of priyanshi should come out
+
+let suppose you stored in Array
+
+then you use for loop and iterate the array and what you do you compare one  by one
+with each entry then you have to iterate lots if priyanshi's records in middle or
+this will create huge problem in cpu usage. you have to execute huge no of instructions
+to cpu
+
+1 CPU Usage High
+2 Latency (Time taken to extract)
+3 Linear Search is inefficient technique Complexity O(n)
+4 very Slow
+5 Binary Search needed sorted order and then only you can apply
+it will again not be that fast for searching complexity O(log(n))
+6 Expect O(1) complexity in time
+
+
+Hashing is a fastest data searching technique which uses Hash Data Structure
+it has a principle of using Key Value Pair
+
+Consider there is a Hash Function which takes key Hash(Key); and it generates a unique
+number for each key  example (1,"Priyanshi) (2,"Romil") etc. and now you search Priyanshi
+for priyanshi there will be HASH Function  which returns the result in just one
+Instruction reduces cpu usage , very fast
+
+O(1) only one instruction is needed to search and retrieve
+
+that's why we use hash data structure the most
+
+we should always give input data where key should be unique
+Hash Function --> Object class has hashcode method that generates hashcode
+
+
+How Set implements uniqueness in itself ?
+
+--> it uses Map data structure internally and set(Values) are taken as keys MAP and all values related
+to those keys taken as empty

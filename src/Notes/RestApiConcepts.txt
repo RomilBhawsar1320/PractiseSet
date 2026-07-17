@@ -1,0 +1,32 @@
+Fundamentals of Rest
+
+1 URL - Uniform Resource Locator - public base url like www.amazon.com
+2 URI - Uniform Resource Identifier - particular resource uniquely identifying like . which resource to identify like /products
+3 DNS - Domain Name Server - application running on particular server conversion of 192.169.10.5 converted to www.google.com or vice versa. Translate ip to name
+4 HTTP -- Hypertext Transfer Protocol .
+            1 Request
+            2 Response
+            3 Headers
+            4 Status Codes
+            5 Http Methods
+            6 Stateless vs Stateful servers
+            7 Query vs Path Parameters
+
+
+server not maintaining details of every request that is called stateless
+server maintaining details of every request is called statefull.
+session store details of request and maintain a cookie store on client side (Browser) . only first time need to authenticate and authorize.
+session is stored on server side and cookie on browser side.
+http is stateless
+
+
+https://goibibo.com/booking?language=eng&currency=inr
+
+?ahead is query parameter
+
+3 ways browser or client can request the server 1. Query Parameter 2. path param 3. Request Body(Post and Put)
+
+1 Query parameter - let say need to fetch products from amazon whose price range between 10 and 20  or any specific product with full detail /products?id=1
+/products?category=electronics&subcategory=mobile&brand=Apple&sort=price . non id attributes used in query parameter
+2 Path parameter - /products/{id} use path parameter most of the time . if you can uniquely identify any resource use path parameter and if you want more filteration
+then only use query Parameter.

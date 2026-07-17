@@ -1,0 +1,904 @@
+Java Locks & Synchronization - Complete Interview Notes
+1. Why Do We Need Locks?
+
+In multithreaded applications, multiple threads can access the same data simultaneously.
+
+Example:
+
+Java
+balance = 1000;
+
+
+
+Thread-1 -> deposit(100);
+
+Thread-2 -> withdraw(50);
+
+Show more lines
+
+Expected result:
+
+Plain Text
+1050
+
+Show more lines
+
+But because both threads may read and update balance at the same time, the final value can become incorrect.
+
+This problem is called a Race Condition.
+
+2. What is a Race Condition?
+
+A race condition occurs when:
+
+Multiple threads access shared data.
+At least one thread modifies the data.
+There is no synchronization.
+
+Example:
+
+Java
+balance += 100;
+
+`
+
+Show more lines
+
+Looks like one statement but internally:
+
+Plain Text
+1. Read balance
+
+2. Calculate new value
+
+3. Write new value
+
+Show more lines
+
+Suppose:
+
+Plain Text
+Balance = 1000
+
+Show more lines
+
+Execution:
+
+Plain Text
+Thread A reads 1000
+
+Thread B reads 1000
+
+
+
+Thread A writes 1100
+
+Thread B writes 950
+
+Show more lines
+
+Final balance:
+
+Plain Text
+950
+
+Show more lines
+
+Correct balance:
+
+Plain Text
+1050
+
+Show more lines
+
+One update is lost.
+
+This is a Race Condition.
+
+3. What is a Critical Section?
+
+A critical section is a piece of code that accesses shared resources.
+
+Example:
+
+Java
+balance += amount;
+
+Show more lines
+
+or
+
+Java
+balance -= amount;
+
+Show more lines
+
+Since multiple threads can access these lines, they are critical sections.
+
+Only one thread should execute a critical section at a time.
+
+4. What is a Lock?
+
+A lock is a mechanism that ensures:
+
+Only one thread can execute a critical section at a time.
+
+Think of it as a bathroom key.
+
+Plain Text
+Person A enters bathroom
+
+Person B waits outside
+
+
+
+Person A leaves
+
+Person B enters
+
+`
+
+Show more lines
+
+Same concept applies to threads.
+
+5. Java Intrinsic Lock (Monitor Lock)
+
+Every Java object has an internal lock called a Monitor Lock.
+
+When a thread enters a synchronized block or method:
+
+Java
+synchronized(this){
+
+ // critical section
+
+}
+
+Show more lines
+
+Java automatically acquires the object's monitor.
+
+6. Synchronized Method
+
+Example:
+
+Java
+public synchronized void deposit(double amount){
+
+ balance += amount;
+
+}
+
+`
+
+Show more lines
+
+Internally:
+
+Java
+public void deposit(double amount){
+
+ synchronized(this){
+
+ balance += amount;
+
+ }
+
+}
+
+Show more lines
+
+Flow:
+
+Plain Text
+Thread-1 acquires lock
+
+
+
+balance += amount
+
+
+
+Thread-2 waits
+
+
+
+Thread-1 releases lock
+
+
+
+Thread-2 acquires lock
+
+Show more lines
+7. Synchronized Block
+
+Instead of locking the entire method:
+
+Java
+public void deposit(double amount){
+
+ synchronized(this){
+
+ balance += amount;
+
+ }
+
+}
+
+Show more lines
+
+Benefits:
+
+Better performance
+Smaller critical section
+More control
+
+Example:
+
+Java
+public void process(){
+
+
+
+ // no lock
+
+
+
+ synchronized(this){
+
+ balance += 100;
+
+ }
+
+
+
+ // no lock
+
+}
+
+``
+
+Show more lines
+
+Only the critical part is locked.
+
+8. What is Reentrancy?
+
+A lock is Reentrant if:
+
+A thread holding a lock can acquire it again.
+
+Example:
+
+Java
+public synchronized void methodA(){
+
+ methodB();
+
+}
+
+
+
+public synchronized void methodB(){
+
+ System.out.println("Hello");
+
+}
+
+Show more lines
+
+Execution:
+
+Plain Text
+Thread-1 enters methodA()
+
+
+
+Lock acquired
+
+
+
+methodA() calls methodB()
+
+
+
+methodB() also needs same lock
+
+
+
+Thread already owns lock
+
+
+
+Allowed
+
+Show more lines
+
+No deadlock occurs.
+
+9. Is synchronized Reentrant?
+
+YES.
+
+Java Monitor Locks are Reentrant.
+
+Example:
+
+Java
+public synchronized void methodA(){
+
+ methodB();
+
+}
+
+
+
+public synchronized void methodB(){
+
+}
+
+Show more lines
+
+Works perfectly.
+
+10. What is ReentrantLock?
+
+Java provides an explicit locking mechanism:
+
+Java
+import java.util.concurrent.locks.ReentrantLock;
+
+``
+
+Show more lines
+
+Example:
+
+Java
+private ReentrantLock lock =
+
+ new ReentrantLock();
+
+
+
+public void deposit(double amount){
+
+
+
+ lock.lock();
+
+
+
+ try{
+
+ balance += amount;
+
+ }
+
+ finally{
+
+ lock.unlock();
+
+ }
+
+}
+
+Show more lines
+11. Why Use ReentrantLock Instead of synchronized?
+
+Because it provides extra features.
+
+Feature 1 - tryLock()
+
+Instead of waiting forever:
+
+Java
+if(lock.tryLock()){
+
+ try{
+
+ // work
+
+ }
+
+ finally{
+
+ lock.unlock();
+
+ }
+
+}
+
+Show more lines
+
+If lock isn't available:
+
+Java
+false
+
+Show more lines
+
+is returned immediately.
+
+Feature 2 - Timed Locking
+Java
+if(lock.tryLock(5, TimeUnit.SECONDS)){
+
+ try{
+
+
+
+ }
+
+ finally{
+
+ lock.unlock();
+
+ }
+
+}
+
+Show more lines
+
+Waits maximum:
+
+Plain Text
+5 seconds
+
+Show more lines
+
+Then gives up.
+
+Feature 3 - Interruptible Locking
+Java
+lock.lockInterruptibly();
+
+Show more lines
+
+Waiting thread can be interrupted.
+
+Useful in enterprise applications.
+
+Feature 4 - Fair Locking
+
+By default:
+
+Plain Text
+No fairness guarantee
+
+Show more lines
+
+A thread may repeatedly get lock.
+
+Fair Lock:
+
+Java
+ReentrantLock lock =
+
+ new ReentrantLock(true);
+
+Show more lines
+
+Order:
+
+Plain Text
+First Come
+
+First Served
+
+
+
+Show more lines
+12. synchronized vs ReentrantLock
+synchronized
+Java
+public synchronized void deposit(){
+
+}
+
+Show more lines
+
+Advantages:
+
+Easy to use
+Less code
+Automatic release
+Less chances of bugs
+
+Disadvantages:
+
+Less flexible
+ReentrantLock
+Java
+lock.lock();
+
+
+
+try{
+
+
+
+}
+
+finally{
+
+ lock.unlock();
+
+}
+
+Show more lines
+
+Advantages:
+
+tryLock()
+Fair locking
+Interruptible
+More control
+
+Disadvantages:
+
+Must manually unlock
+Easier to make mistakes
+13. Static Synchronization
+
+Instance synchronization:
+
+Java
+public synchronized void deposit(){
+
+}
+
+Show more lines
+
+Lock acquired:
+
+Plain Text
+Current Object
+
+Show more lines
+
+Example:
+
+Java
+Account a1 = new Account();
+
+Account a2 = new Account();
+
+Show more lines
+
+Both have separate locks.
+
+Static synchronization:
+
+Java
+public static synchronized void method(){
+
+}
+
+Show more lines
+
+Lock acquired:
+
+Plain Text
+Account.class
+
+Show more lines
+
+Only one thread across all objects can execute it.
+
+14. Object-Level Lock vs Class-Level Lock
+Object Lock
+Java
+synchronized(this){
+
+}
+
+Show more lines
+
+Lock:
+
+Plain Text
+Current Object
+
+Show more lines
+
+Example:
+
+Java
+Account a1
+
+Account a2
+
+Show more lines
+
+Threads can execute simultaneously on different objects.
+
+Class Lock
+Java
+synchronized(Account.class){
+
+}
+
+Show more lines
+
+Lock:
+
+Plain Text
+Entire Class
+
+Show more lines
+
+Only one thread can execute.
+
+15. Deadlock
+
+Deadlock occurs when:
+
+Plain Text
+Thread A waits for Thread B
+
+
+
+Thread B waits for Thread A
+
+Show more lines
+
+Neither proceeds.
+
+Example:
+
+Java
+Thread 1:
+
+lock(A)
+
+lock(B)
+
+
+
+Thread 2:
+
+lock(B)
+
+lock(A)
+
+Show more lines
+
+Result:
+
+Plain Text
+Deadlock
+
+Show more lines
+16. How to Prevent Deadlock
+Rule 1
+
+Acquire locks in same order.
+
+Good:
+
+Java
+lock(A)
+
+lock(B)
+
+Show more lines
+
+for all threads.
+
+Rule 2
+
+Keep critical sections short.
+
+Rule 3
+
+Use tryLock()
+
+Java
+if(lock.tryLock()){
+
+}
+
+Show more lines
+
+instead of waiting forever.
+
+17. ReadWriteLock
+
+Useful when:
+
+Plain Text
+Many Readers
+
+Few Writers
+
+Show more lines
+
+Example:
+
+Java
+ReadWriteLock rw =
+
+ new ReentrantReadWriteLock();
+
+Show more lines
+
+Read:
+
+Java
+rw.readLock().lock();
+
+Show more lines
+
+Write:
+
+Java
+rw.writeLock().lock();
+
+Show more lines
+
+Behavior:
+
+Plain Text
+Multiple readers allowed
+
+
+
+Only one writer allowed
+
+Show more lines
+18. StampedLock (Java 8+)
+
+Advanced lock for high-performance reads.
+
+Features:
+
+Read Lock
+Write Lock
+Optimistic Read
+
+Example:
+
+Java
+StampedLock lock =
+
+ new StampedLock();
+
+Show more lines
+
+Used in high-performance concurrent systems.
+
+19. Volatile vs Synchronization
+
+Many interviewers ask this.
+
+volatile
+Java
+private volatile boolean running;
+
+Show more lines
+
+Provides:
+
+✅ Visibility
+
+Does NOT provide:
+
+❌ Mutual Exclusion
+
+❌ Atomicity
+
+synchronized
+
+Provides:
+
+✅ Visibility
+
+✅ Mutual Exclusion
+
+✅ Atomicity
+
+20. Atomic Variables
+
+Instead of:
+
+Java
+int counter;
+
+Show more lines
+
+Use:
+
+Java
+AtomicInteger counter =
+
+ new AtomicInteger();
+
+Show more lines
+
+Increment:
+
+Java
+counter.incrementAndGet();
+
+Show more lines
+
+Advantages:
+
+Thread-safe
+Faster than synchronization
+Lock-free
+21. Frequently Asked Interview Questions
+Q1. What is a Race Condition?
+
+When multiple threads modify shared data simultaneously causing inconsistent results.
+
+Q2. Why do we need synchronization?
+
+To protect critical sections and avoid race conditions.
+
+Q3. Is synchronized thread-safe?
+
+Yes.
+
+Q4. Is synchronized reentrant?
+
+Yes.
+
+Q5. Does synchronized use ReentrantLock?
+
+No.
+
+It uses Java's intrinsic monitor lock, which is reentrant.
+
+Q6. Difference between synchronized and Lock?
+
+synchronized is implicit and simpler.
+
+ReentrantLock is explicit and offers advanced features such as:
+
+tryLock()
+Fairness
+Interruptibility
+Q7. What is a Monitor?
+
+The internal lock associated with every Java object.
+
+Q8. What is Deadlock?
+
+When two or more threads wait forever for each other's locks.
+
+Q9. What is volatile?
+
+Provides visibility of changes across threads but does not prevent race conditions.
+
+Q10. What is AtomicInteger?
+
+A lock-free thread-safe integer implementation.
+
+Interview One-Liner Summary
+
+Race Condition → Multiple threads modifying shared data simultaneously.
+
+Synchronization → Prevents race conditions.
+
+Monitor Lock → Internal lock attached to every Java object.
+
+synchronized → Uses intrinsic monitor lock.
+
+Reentrant → Same thread can acquire the same lock multiple times.
+
+ReentrantLock → Explicit lock with advanced control.
+
+Deadlock → Threads waiting forever for each other.
+
+volatile → Visibility only.
+
+AtomicInteger → Lock-free thread-safe operations.
+
+ReadWriteLock → Multiple readers, single writer.
+
+StampedLock → High-performance read-heavy locking mechanism.
+
+This is enough to confidently answer most Java Core and multithreading interview questions around locks and synchronization.

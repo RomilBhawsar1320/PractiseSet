@@ -1,0 +1,44 @@
+
+MultiThreading:
+
+what is MultiTasking and MultiProcessing and what is MultiThreading
+when you work on multiple task at a time is called MultiTasking using multiple processes is multiprocessing
+or by using Multiple Threads
+
+what is the need of Multitasking
+earlier OS were designed to do single task only . old time CPU can execute one instruction at a time
+CPU used to have one core at that time . a mechanism where we can execute one task at a time is Single Processing
+Process = any program in running state in your RAM .
+UNIX first came with an operating system to implement multiprocessing and reason was CPU used to sit idle after
+completing one task . now through UNIX we can run multiple processes simultaneously
+Operating system does the task scheduling team if multiple process to be run . Time Slicing approach
+Round Robin Algorithm used in TimeSlicing.
+Now we have 8 cores , 16 cores and each core work as an independent cpu and now we can execute multiple
+processes at a time . 4 processes can be taken care by 4 different processes. this is called parallel processing
+
+within the process if i need to do parallel processing thread is introduced
+if you want to achieve parallel processing in a single process using thread is called MultiThreading.
+
+
+Thread is not a process its a part of process . there is a Stack function frame created for each thread and
+thread can share multiple data structure of process like Heap , Stack , String Constant Pool etc.
+here because you don't need to create data structure for each thread because it can use data structure
+of processes and that's why it is called Lightweight . while process is heavy weight .
+
+Example of MultiThreading : a man running a bike and the same human is using clutch , break , gear and another
+break at a time . four threads parallelly . consider each of them as thread and as a person you can consider
+as a process.
+
+Types of Operation
+
+1 IO Intensive ex. file read, db query , API call socket programming call
+2 Compute Intensive ex. calculation , filtering or any type of condition check
+
+For any type of Operation i am making a thread ( thread per operation) .Threading is for Max cpu utilization
+
+CPU has multiple cores and OS map each thread to multiple cores are called Platform Threads ( we can also say
+them OS Threads) . Threads managed by Operating system
+
+Create a Thread in two ways
+1. Java.Lang package have Thread class
+2 Implementing Runnable Interface

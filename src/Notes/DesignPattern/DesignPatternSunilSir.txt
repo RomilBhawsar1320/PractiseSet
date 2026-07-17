@@ -1,0 +1,39 @@
+
+Design Patterns
+
+Singleton Design Pattern usecase - only one Object of a class can be created so that heavy resources cannot be
+created everytime object is used . one time load and shared with all places where to use it.
+steps
+1 make Private Constructor of class
+2 make one public static getInstance method
+3 have one instance of class and make it to null
+4 inside the get instance method create object instance only when instance is null otherwise use existing instance
+5 why private constructor so that outside class no one can create object using new ClassName().
+6 why method static because how will be able to create instance if constructor is private
+7 Runtime class is a Singleton class as you can see getRuntime Method of it
+
+Most Used
+1 Singleton
+2 Factory
+3 Builder
+4 Observer
+
+Factory Design Pattern -> below example of Factory Design Pattern (Loosely Coupled Design implementation is
+nothing but Factory Design Pattern).
+
+ex - lets suppose we have created InMemory Movie Service and JDBCMovieService and we use it in a loosely
+coupled way
+
+IMovieService movieService = MovieServiceFactory.getMovieService("In_Memory");
+
+public class MovieServiceFactory{
+    public static ImovieeService getMovieService(String type){
+        if(type.equals("JDBC"){
+            return new JDBCMovieService;
+        }else if (type.equals("In_Memory"){
+            return new InMemoryMovieService;
+        }else{
+            throw new illegalStateArgumentException("invalid service type provided ");
+            }
+    }
+}

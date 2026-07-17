@@ -1,0 +1,152 @@
+Hibernate Framework
+framework is a collection of classes interfaces abd utilities to simplify solution
+Hibernate will take care of Underline JDBC Communication.
+Hibernate is an ORM Framework (Object Relational Mapping ) Framework
+Java is an Object oriented language and Database works on SQL Queries
+Hibernate will map those objects as entities of tables
+
+for ex. -> Student object and student has id , age and name so ORM says just map each field of Student
+Object with column of the table is called Object relational mapping .
+Mapping of java Object with Database Column and table
+
+Java Application will talk to Hibernate ORM Framework and hibernate internally will connect to JDBC to interact
+with database. Hibernate simplified lot of things we did while using connection , statement and prepared statement
+and result se we used . which was cumbersome
+
+Hibernate works on Standardised approaches of JPA
+
+JPA (Jakarta Persistence API OR Java Persistence API) - standardised approach for working with different
+ORM Frameworks . it is consistent to communicate with Db
+
+ Hibernate , Ibatis , Eclipse Link (all of these ORM Frameworks ) based out of JPA which has predefined consistent
+ rules to communicate with database
+
+we also have Spring data JPA which also implements JPA
+
+Hibernate provide some Libraries which we generally call Jar file like core , ehcache etc.
+if we have to use Hibernate then we have to use a hibernate configuration file that is
+hibernate-cfg.xml and this file contains url , password and username type of details
+
+Hibernate has various API/Interface for example
+
+1 SessionFactory - to create different sessions or we can say connections [GlobaL Factory shared with multiple threads]
+2 Session - Connection
+3 Transaction (ACID )
+4 ServiceRegistry - to register some common services
+
+SessionFactory is a Heavy Object . it maintains configurations and thats why we will make it singleton
+Automatic DB Table creation can be done from Hibernate
+
+
+Hibernate Util class
+
+package org.nitor.utils;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.Metadata;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+
+public class HibernateUtil {
+    private static SessionFactory sessionFactory;
+    private static StandardServiceRegistry registry;
+    private HibernateUtil(){}
+    public static SessionFactory getSessionFactory(){
+        if (sessionFactory == null){
+            try {
+                //create registry
+                registry = new StandardServiceRegistryBuilder().configure().build();
+
+                //create MetadataSources
+                MetadataSources sources = new MetadataSources(registry);
+
+                //create Metadata(uses hibernate.cfg.xml)
+                Metadata metadata = sources.getMetadataBuilder().build();
+
+                //Create SessionFactory
+                sessionFactory = metadata.getSessionFactoryBuilder().build();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                if(registry != null){
+                    StandardServiceRegistryBuilder.destroy(registry);
+                }
+            }
+        }
+        return  sessionFactory;
+    }
+    public static void shutdown(){
+        if(registry != null){
+            sessionFactory.close();
+            StandardServiceRegistryBuilder.destroy(registry);
+        }
+    }
+}
+
+
+
+How to use it with main class
+
+package org.nitor.hibernate;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.nitor.entities.Student;
+import org.nitor.utils.HibernateUtil;
+
+import java.util.List;
+
+public class HibernateTest {
+    public static void main(String[] args) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+
+        Transaction txn = session.beginTransaction();
+
+        // Insert new records into Database
+
+        Student s1 = new Student(11,"cucurella",33);
+        session.persist(s1);
+
+        //here below we used Hibernate Query Language (HQL)
+        List<Student> students = session.createQuery("from Student",Student.class).list();
+        students.forEach(System.out::println);
+
+        List<Student> students1 = session.createQuery("from Student",Student.class).list();
+        students1.forEach(System.out::println);
+
+// Hibernate has various levels of caching as well . if you fire the same query again it will return cached
+//  output
+        txn.commit();
+        session.close();
+        HibernateUtil.shutdown();
+    }
+}
+
+/*
+Main Advantage of Hibernate is let suppose you change the database suddenly . do you need to change anything
+in your code ? no right . just a property change in hibernate.cfg.xml file
+every database have different types of syntaxes which hibernate takes care automatically
+
+auto increment in MYSQL , Sequence in Oracle and different in postgres as a developer we don't want to
+check on query syntaxes . How is this done . hibernate or JPA uses dialect ( Object to SQL )
+
+
+ */
+
+ most Inportant hibernate.cfg.xml file to see how we manage configfuration
+
+ <!DOCTYPE hibernate-configuration PUBLIC
+         "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+ <hibernate-configuration>
+     <session-factory>
+         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+         <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/nitordb</property>
+         <property name="hibernate.connection.username">postgres</property>
+         <property name="hibernate.connection.password">Priyanshi@1320</property>
+         <property name="show_sql">true</property>
+         <property name="hibernate.hbm2ddl.auto">create</property>
+         <mapping class="org.nitor.entities.Student"/>
+     </session-factory>
+ </hibernate-configuration>

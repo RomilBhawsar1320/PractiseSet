@@ -1,0 +1,40 @@
+Thread Pooling
+
+Thread pooling helps in CPU utilization at its best and making system more scalable
+ExecutorService ex = executors.newThreadPool(ncores)
+ex.submit(Runnable Task)
+
+ex. webservers like Tomcat , GlassFish gets lots of request (GET MOVIES API hit on Netflix )
+and for every request Database query is happening . waiting time will be huge . every request will be put on
+hold for some time which accumulate to huge Latency . here we are not optimizing threads . even we are getting
+a lot of request but our threads are blocked for IO Opertions
+
+example : lets suppose if 10cr request and if we directly allow them to hit database it will make it down
+and waiting queue will be huge . response time will become huge . latency increased now timeout will occur.
+java is mainly based on networking so they need to build something new to utilize CPU
+
+we cannot make 2cr threads and scaling not possible with Platform threads . it will increase Latency
+Threads are best for Computation Intensive operations but not good for IO Intensive Threads
+
+
+Java introduced one Concept of Virtual Threads, and it made possible to create lakhs of virtual threads
+java allows to create a virtual thread per request .let suppose 10 lakh request came so you can use
+virtual thread . Virtual Threads are fully managed by JVM .virtual thread is super lightweight (kb) and
+Platform Thread (2MB)
+
+1 virtual Threads are very light weight
+2 small size
+3 can be in millions (no limit as such)
+4 Managed by JVM
+5 Designed for Blocked IO Operation (like file reading , networking calls , db calls )
+
+this type of thread is called Virtual Thread (came in Java 21 and came in preview stage in java 19)
+Virtual Thread should not be used in CPU Intensive or Computation intensive work like image processing etc.
+
+while Platform Threads are managed by Operating system
+Virtual threads are not faster threads; they do not run code any faster than platform threads.
+They exist to provide scale (higher throughput), not speed (lower latency).
+Use virtual threads in high-throughput concurrent applications, especially those that consist of a great number of concurrent
+tasks that spend much of their time waiting. Server applications are examples of high-throughput applications because they
+typically handle many client requests that perform blocking I/O operations such as fetching resources.
+

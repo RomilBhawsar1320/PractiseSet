@@ -1,0 +1,88 @@
+Four types of Repositories
+
+1 Local Repo - in your users/.m2
+2 Central Repo - mvn Repository
+3 Internal Organizational Repository - Artifactory of your organization . all people use from here( Jfrog & Nexus)
+4 Remote Repository - Harness , bitbucket , GIT
+
+JDBC and Databases why ?
+1 handle Large data
+2 security
+3 Tabular data storage
+4 Relationship between data (One to Many, Many to One)
+5 ACID Property ( Atomicity , Consistency , Isolation , Durability )
+Atomicity - provides transactional support . if all good commit the transaction and rollback if anything
+goes wrong
+Consistency - every transaction should be logged properly
+Isolation - commit should happen isolated way . ex 2 transaction working on same db they should not know each othe
+Durability - if some power off or something goes off it should not affect db
+6 it provides database constraints like primary key , foreign key which helps in scaling db
+
+
+Two types of Databases
+1 Relational Databases
+schema structure fixed ex- postgres , oracle , MYSQL etc.
+
+2 Non - Relational Databases
+schema structure can vary for ex - document db - mongoDB , Key-Value Pair db [ Redis ,AWS Dynamo db ] ,
+Graph database - [Amazon Neptune , Neo4j , Oracle AI], LDAP , Elastic search - used for text based searching
+
+Each library provide different classes and objects in case of maven or gradle repositories
+In order to enforce some rules we have interfaces . standardization of some contract using any type of
+dependency
+
+we have so many databases and how we can connect to anyone in a similar fashion .
+
+JDBC (Java Database Connectivity) it's a set of classes and interfaces to interact with different types
+of Databases (Loosely coupled design concept here)
+
+Steps to connect to the database
+
+1 Load the Driver  for ex.  Class.forName("com.mysql.cj.jdbc.Driver")
+2 Register the driver
+3 Establish the connection
+4 create a statement to write query
+5 process the results
+7 close the connection/statement/resultset
+
+We have Connection interface
+Connection connection = DriverManager.getConnection("jdbc:postgres://localhost:5432","postgres","Priyanshi@1320");
+
+package org.example.jdbc;
+import java.sql.*;
+import java.util.Iterator;
+
+public class DatabaseConnector {
+
+    public static void main(String[] args) {
+
+        try {
+            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/nitordb",
+                    "postgres",
+                    "Priyanshi@1320");
+
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("select * from employees");
+
+            while (resultSet.next()) {
+                String empname = resultSet.getString(1);
+                int empId = resultSet.getInt(2);
+                int age = resultSet.getInt(3);
+                System.out.println("EMP NAME " + empname + " his/her id " + empId + " age is " + age);
+            }
+            statement.close();
+            resultSet.close();
+            connection.close();
+
+
+        }  catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+}
+
+
+
+
