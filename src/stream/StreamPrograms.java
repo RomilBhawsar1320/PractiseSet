@@ -222,12 +222,20 @@ public class StreamPrograms {
 //      Find second-highest number.
 
         Optional<Integer> secHigh = newListInt1.stream().distinct().sorted(Comparator.reverseOrder()).skip(1).findFirst();
-        System.out.println(secHigh.get());
+//        System.out.println(secHigh.get());
 
 //        Find second-lowest number.
 
         Optional<Integer> secLowest = newListInt1.stream().distinct().sorted().skip(1).findFirst();
-        System.out.println(secLowest.get());
+//        System.out.println(secLowest.get());
+
+//      Calculate total salary of employees.
+
+        Optional<Double> sumSal = workers.stream().map(Workerey::getSalary).reduce((a,b) -> a + b);
+        System.out.println(sumSal.get());
+//
+
+
 
 
 
