@@ -30,3 +30,95 @@ https://goibibo.com/booking?language=eng&currency=inr
 /products?category=electronics&subcategory=mobile&brand=Apple&sort=price . non id attributes used in query parameter
 2 Path parameter - /products/{id} use path parameter most of the time . if you can uniquely identify any resource use path parameter and if you want more filteration
 then only use query Parameter.
+3. Request Body - all values passed path/query Url its visible . limit on your data size on Url .lets say i want to send more than 2kb . Big data chunk , its
+hidden from users , form data which has a lot of information , need to upload some document etc. ex. xml/json/binary
+you cannot use all HTTP Methods here you can use post and put . get is not recommended because it is idempotent (everytime hit same result)
+4. Headers - meta Information , API Keys , Authorization Token ,extra parameters like traceid , which type of language , which type of content.
+
+HTTP Methods
+
+1 GET - Retrieve or read the data
+2 POST - Creating new resource ex. filling any form and have those details inputted to the database
+3 PUT - Update any existing resource . you can create as well for ex. full object model entity created or updated
+4 DELETE - remove the resource
+5 PATCH - (Partial updating the resource) updating the particular field or attribute of the object entity like any one field from any model like employee and its age and insuranceCompanyName
+6 OPTIONS-
+7 HEADERS
+
+
+Http Status Codes - whenever you create any rest api you need to show the status of it .
+
+1xx - Informational Status codes . request recieved succesfully on server side
+
+2xx - successful or failed operation
+       200 - Request successful (student retrieved, products retrieved etc.) named OK
+       201 - Resource Created (Student created . whenever creating new resource)
+       204 - No Content request is successful but needs no content to show
+
+3xx - Redirection ( bookmyshow --> payment ---> gpay )
+       301 - Resource moved permanently
+       302 - found moved resource
+
+4xx - client side error to be shown
+       400 - Bad Request (wrong query parameter used or any wrong url hit via path parameter. something invalid done from client side  )
+             400 means client sending wrong information
+       401 - Unauthorized , Authentication is required or the provided credentials are invalid. Examples:Missing access token , Expired token
+                                                                                                Invalid username/password
+       402 - Payment Required
+                Reserved for future use.
+                Commonly used by some APIs to indicate payment/subscription is required.
+       403 - Forbidden
+                The client is authenticated, but does not have permission to access the resource.
+                Example:
+                User is logged in but lacks the required role/authorization.
+       404 - Not Found (Searched for a resource whose id is 100 and its not there in database so no record found )
+       409 - Conflict ( current state of resource and what you are receiving has some problem ) Examples:
+                                                                                                Duplicate record creation
+                                                                                                Version mismatch during update
+                                                                                                Concurrent modification conflict
+       429 - Too Many Request The client has exceeded the allowed request rate (rate limit).
+                              Example:
+                              Sending too many API requests within a short period.
+
+5xx - 5xx = Server-side errors
+       The client request is valid, but the server failed to process it due to an issue on the server.
+
+      500 – Internal Server Error . Generic server error Something unexpected went wrong on the server.
+      Examples:
+      Null Pointer Exception
+      Unhandled exception
+      Database query failure
+
+      501 – Not Implemented
+
+      The server does not support the requested functionality.
+      Example:
+      API endpoint exists but the HTTP method (PATCH, PUT, etc.) is not implemented.
+
+      502 – Bad Gateway
+
+      Server acting as a gateway/proxy received an invalid response from an upstream server.
+      Examples:
+      API Gateway calling a backend service that is down
+      Invalid response from microservice
+
+      503 – Service Unavailable
+
+      Server is temporarily unable to handle requests.
+      Examples:
+      Server under maintenance
+      Database unavailable
+      Server overloaded
+
+      504 – Gateway Timeout
+      Gateway/proxy did not receive a response from the upstream server within the expected time.
+      Example:
+      API Gateway waits for Service B, but Service B takes too long to respond.
+
+      505 – HTTP Version Not Supported
+      The server does not support the HTTP protocol version used in the request.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Lombok Library helps you generate getter , setter , hashcode() , toString() . annotation based library . avoid writing a lot of boilerplate code
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
