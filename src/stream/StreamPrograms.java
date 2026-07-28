@@ -232,8 +232,17 @@ public class StreamPrograms {
 //      Calculate total salary of employees.
 
         Optional<Double> sumSal = workers.stream().map(Workerey::getSalary).reduce((a,b) -> a + b);
-        System.out.println(sumSal.get());
-//
+//        System.out.println(sumSal.get());
+//      count by Key
+
+        List<String> newStringList = Arrays.asList("Romil","Priyanshi","Pompie","Priya","Sagarr","Sakshi","Akash","Shraddha","Ankush",
+                "Romil","Priyanshi","Sakshi","Akash","Shraddha","Ankush","Romil","Priyanshi","Pompie","Priya","Sagarr","Ankush",
+                "Romil","Priyanshi","Pompie","Priya","Sakshi","Akash","Shraddha","Ankush","Romil","Priyanshi","Pompie","Sagarr","Sakshi","Akash","Shraddha","Ankush");
+
+        Map<String,Long> stringMap1 = newStringList.stream().collect(Collectors.groupingBy(r -> r , Collectors.counting()));
+        stringMap1.forEach((k,v) -> System.out.println(k+":"+v));
+
+
 
 
 

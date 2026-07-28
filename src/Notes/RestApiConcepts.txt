@@ -121,4 +121,8 @@ Http Status Codes - whenever you create any rest api you need to show the status
 Lombok Library helps you generate getter , setter , hashcode() , toString() . annotation based library . avoid writing a lot of boilerplate code
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+Springboot is an Opinionated framework which helps in autoconfiguration via various dependencies
+1 Inbuild Health check Monitoring using actuators
+2 Rapid Development
+3 Embedded Tomcat , jetty serwers and no need to deploy war files
+4 easily configure third party libraries via dependencies 
