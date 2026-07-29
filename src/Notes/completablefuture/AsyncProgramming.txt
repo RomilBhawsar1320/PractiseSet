@@ -1,0 +1,360 @@
+Q1. What is the problem with synchronous programming?
+Answer
+
+In synchronous programming, tasks execute one after another. The next task cannot start until the current task finishes.
+
+String user = getUser();      // 5 sec
+String orders = getOrders();  // 4 sec
+
+System.out.println(user);
+System.out.println(orders);
+
+getUser()  -> 5 sec
+getOrders() -> 4 sec
+
+Total = 9 sec
+The main thread remains blocked while waiting for each operation to complete.
+
+Key Points
+Tasks execute sequentially.
+Main thread waits for completion.
+Resources aren't utilized efficiently.
+Poor performance for independent operations.
+
+Interview Summary
+Synchronous programming blocks the current thread until a task completes, causing unnecessary waiting and increased execution time.
+
+Q2. Why was Future introduced?
+Answer
+
+Future was introduced to support asynchronous execution.
+Instead of executing a task in the main thread, we submit it to a thread pool.
+
+ExecutorService executor =
+        Executors.newFixedThreadPool(2);
+
+Future<String> future =
+        executor.submit(() -> {
+            Thread.sleep(5000);
+            return "Romil";
+        });
+
+System.out.println("Doing other work");
+The task runs in another thread while the main thread continues execution.
+
+Key Points
+Supports asynchronous execution.
+Allows parallel processing.
+Main thread can do other work.
+Result can be fetched later.
+
+Interview Summary
+Future allows a task to run asynchronously and provides a placeholder object to retrieve the result later.
+
+Q3. What is Future in Java?
+Answer
+Future is an interface in the java.util.concurrent package representing the result of an asynchronous computation.
+Future<String> future =
+        executor.submit(() -> "Hello");
+The result may not be available immediately.
+String result = future.get();
+
+Key Points
+Represents future result.
+Returned by ExecutorService.
+Supports status checking.
+Supports cancellation.
+
+Interview Summary
+Future is a container for the result of an asynchronous task.
+
+Q4. What are the important methods of Future?
+Answer
+get()
+future.get();
+Returns result and blocks if necessary.
+
+isDone()
+future.isDone();
+Checks completion.
+
+cancel()
+future.cancel(true);
+Attempts cancellation.
+
+isCancelled()
+future.isCancelled();
+Checks cancellation status.
+
+Interview Summary
+The most commonly used Future methods are get(), isDone(), cancel(), and isCancelled().
+
+Q5. What are the limitations of Future?
+Answer
+Future solved asynchronous execution but introduced several limitations.
+
+Limitation 1
+Blocking get()
+future.get();
+Blocks the calling thread.
+
+Limitation 2
+No callback mechanism.
+Not possible:
+
+Limitation 3
+No chaining support.
+Cannot easily create workflows.
+
+Limitation 4
+Cannot combine multiple futures elegantly.
+
+Limitation 5
+Weak exception handling.
+
+Key Points
+Blocking operations
+No callbacks
+No chaining
+No combination support
+Limited exception handling
+Interview Summary
+
+Future provides asynchronous execution but lacks callback, chaining, composition, and advanced exception-handling capabilities.
+
+Q6. Why was CompletableFuture introduced?
+Answer
+CompletableFuture was introduced in Java 8 to overcome the limitations of Future.
+It implements:
+Java
+Future
+CompletionStage
+
+CompletionStage provides powerful APIs for building asynchronous pipelines.
+
+Key Points
+CompletableFuture supports:
+Async execution
+Callbacks
+Chaining
+Combining tasks
+Exception handling
+Manual completion
+Interview Summary
+
+CompletableFuture extends Future and provides a rich API for asynchronous workflows.
+
+Q7. What is CompletableFuture?
+Answer
+CompletableFuture is a class used for asynchronous and non-blocking programming.
+
+Package:
+java.util.concurrent.CompletableFuture
+
+Example:
+CompletableFuture<String> future =
+CompletableFuture.supplyAsync(
+() -> "Romil");
+
+Key Points
+Introduced in Java 8.
+Implements Future.
+Implements CompletionStage.
+Supports async pipelines.
+Interview Summary
+
+CompletableFuture enables asynchronous execution, transformation, composition, and combination of tasks.
+
+Q8. What is the difference between Future and CompletableFuture?
+Answer
+Future
+Plain Text
+1
+Run task asynchronously
+2
+Get result later
+Show more lines
+CompletableFuture
+Plain Text
+1
+Run task asynchronously
+2
+Transform result
+3
+Chain tasks
+4
+Combine tasks
+5
+Handle exceptions
+Show more lines
+Key Points
+
+Future:
+
+Async execution
+Blocking get()
+
+CompletableFuture:
+
+Async execution
+Non-blocking workflows
+Chaining
+Composition
+Callbacks
+Interview Summary
+
+Future only provides a result in the future, whereas CompletableFuture provides complete asynchronous workflow management.
+
+Q9. How do you create a CompletableFuture?
+Answer
+Using supplyAsync().
+
+CompletableFuture<String> future =
+CompletableFuture.supplyAsync(
+() -> "Romil");
+
+Using runAsync().
+
+CompletableFuture<Void> future =
+CompletableFuture.runAsync(
+() -> System.out.println("Running"));
+
+Key Points
+supplyAsync()
+Supplier<T>
+Returns value.
+
+runAsync()
+Runnable
+Returns nothing.
+
+Interview Summary
+
+supplyAsync() is used when a value must be returned, while runAsync() is used for fire-and-forget tasks.
+
+Q10. What is the difference between supplyAsync() and runAsync()?
+Answer
+supplyAsync()
+
+Returns result.
+
+Java
+CompletableFuture<String> future =
+CompletableFuture.supplyAsync(
+() -> "Java");
+
+runAsync()
+Returns nothing.
+
+CompletableFuture<Void> future =
+CompletableFuture.runAsync(
+() -> System.out.println("Hello"));
+
+Key Points
+
+supplyAsync:
+
+Java
+1
+Supplier<T>
+Show more lines
+
+Returns value.
+
+runAsync:
+
+Java
+1
+Runnable
+Show more lines
+
+No value.
+
+Interview Summary
+
+Use supplyAsync() when a result is required and runAsync() when no result is needed.
+
+Q11. What is the difference between get() and join()?
+Answer
+get()
+Java
+1
+future.get();
+2
+ 
+Show more lines
+
+Throws checked exceptions.
+
+Java
+1
+InterruptedException
+2
+ExecutionException
+Show more lines
+join()
+Java
+1
+future.join();
+Show more lines
+
+Throws unchecked exception.
+
+Java
+1
+CompletionException
+Show more lines
+Key Points
+
+get():
+
+Checked exceptions
+Part of Future
+
+join():
+
+Unchecked exceptions
+Cleaner code
+Interview Summary
+
+join() is generally preferred because it avoids checked exception handling.
+
+Q12. What is thenApply()?
+Answer
+
+Used to transform a result.
+
+Java
+1
+CompletableFuture<String> future =
+2
+CompletableFuture
+3
+.supplyAsync(() -> "romil")
+4
+.thenApply(String::toUpperCase);
+Show more lines
+
+Output:
+
+Plain Text
+1
+ROMIL
+Show more lines
+Key Points
+Java
+1
+T -> R
+Show more lines
+
+Transforms result.
+
+Similar to:
+
+Java
+1
+Stream.map()
+Show more lines
+Interview Summary
+
+thenApply() transforms the output of a CompletableFuture into another value.
