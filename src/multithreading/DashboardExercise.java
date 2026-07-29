@@ -55,6 +55,14 @@ public class DashboardExercise {
         System.out.println("Orders = " + orderFuture.join());
         System.out.println("Payments = " + paymentFuture.join());
 
+        CompletableFuture<String> result =
+                userFuture.thenCombine(
+                        orderFuture,
+                        (user, orders) -> user + " has " + orders + " orders"
+                );
+
+        System.out.println(result.join());
+
         long end = System.currentTimeMillis();
 
         System.out.println(
